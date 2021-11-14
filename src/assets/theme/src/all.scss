@@ -1,0 +1,14 @@
+@import './top-panel.scss';
+@import './center-panel.scss';
+@import './details-panel.scss';
+
+.App {
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  @include top-panel();
+  @include center-panel();
+  @include details-panel();
+}

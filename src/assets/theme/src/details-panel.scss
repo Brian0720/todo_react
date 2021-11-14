@@ -1,0 +1,16 @@
+@mixin details-panel {
+	.details-panel {
+	  position: absolute;
+	  top: 50px;
+	  right: 0;
+	  width: 400px;
+	  height: calc(100% - 50px);
+	  overflow: hidden;
+	  background-color: #eee;
+	  display: none;
+  
+	  &.visible {
+		display: block;
+	  }
+	}
+  }
