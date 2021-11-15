@@ -1,0 +1,20 @@
+[
+	{
+		"id": 1,
+		"name": "Book a hotel",
+		"category": "personal",
+		"complete_by": "11/19/2021"
+	},
+	{
+		"id": 2,
+		"name": "Rent a car",
+		"category": "personal",
+		"complete_by": "11/19/2021"
+	},
+	{
+		"id": 3,
+		"name": "Buy concert tickets",
+		"category": "personal",
+		"complete_by": "11/19/2021"
+	}
+]

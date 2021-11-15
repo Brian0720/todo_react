@@ -4,65 +4,65 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
 class DetailsPanel extends React.Component {
-  constructor() {
-    super();
+	constructor(props) {
+		super(props);
 
-    this.state = {
-      todoItem: "hello world!",
-      category: "personal",
-      categories: [
-        {
-          name: "Personal",
-          value: "personal"
-        },
-        {
-          name: "Business",
-          value: "business"
-        }
-      ]
-    };
-  }
+		const { todo = {} } = props;
 
-  onCategoryChange = (e) => {
-    const { value } = e;
+		this.state = {
+			todoItem: todo.name || "hello world!",
+			category: todo.category || "personal",
+			categories: [
+				{
+					name: "Personal",
+					value: "personal",
+				},
+				{
+					name: "Business",
+					value: "business",
+				},
+			],
+		};
+	}
 
-    this.setState({
-      category: value
-    });
-  };
+	onCategoryChange = (e) => {
+		const { value } = e;
 
-  render() {
-    const { isDetailsVisible } = this.props;
-    const { category, categories, todoItem } = this.state;
-    const panelClassNames = classNames("details-panel", {
-      visible: isDetailsVisible
-    });
+		this.setState({
+			category: value,
+		});
+	};
 
-    return (
-      <div className={panelClassNames}>
-        <TextField
-          required
-          fullWidth={false}
-          label="Required"
-          value={todoItem}
-          variant="filled"
-        />
-        <TextField
-          select
-          fullWidth={false}
-          label="Category"
-          variant="filled"
-          value={category}
-        >
-          {categories.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.name}
-            </MenuItem>
-          ))}
-        </TextField>
-      </div>
-    );
-  }
+	render() {
+		const { category, categories, todoItem } = this.state;
+		const panelClassNames = classNames("details-panel", {
+			visible: true,
+		});
+
+		return (
+			<div className={panelClassNames}>
+				<TextField
+					required
+					fullWidth={false}
+					label='Required'
+					value={todoItem}
+					variant='filled'
+				/>
+				<TextField
+					select
+					fullWidth={false}
+					label='Category'
+					variant='filled'
+					value={category}>
+					{categories.map((option) => (
+						<MenuItem key={option.value} value={option.value}>
+							{option.name}
+						</MenuItem>
+					))}
+				</TextField>
+			</div>
+		);
+	}
 }
 
 export default DetailsPanel;
