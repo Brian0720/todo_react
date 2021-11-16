@@ -1,6 +1,5 @@
 import React from "react";
 import classnames from "classnames";
-import Button from "@mui/material/Button";
 import { DataGrid } from "@mui/x-data-grid";
 
 const columns = [
@@ -11,42 +10,38 @@ const columns = [
 ];
 
 class CenterPanel extends React.Component {
-	onClick = () => {
-		const { setIsDetailsVisible } = this.props;
-
-		setIsDetailsVisible();
-	};
-
 	onSelectionModelChange = (selectionModel) => {
-		const { todos, setTodo } = this.props;
+		const { onSelectionModelChange } = this.props;
 
-		let selectedTodoItem = todos.find((item) => {
-			console.log(item, selectionModel);
-			return item.id === selectionModel[0];
-		});
-
-		console.log(selectedTodoItem);
-		setTodo(selectedTodoItem);
+		onSelectionModelChange(selectionModel[0]);
 	};
 
 	render() {
-		const { todos, isDetailsVisible } = this.props;
+		const { todos, selection, isDetailsPanelVisible } = this.props;
+
+		// change classes of the top-level div element
 		const panelCls = classnames("center-panel", {
-			fullWidth: isDetailsVisible !== true,
+			fullwidth: isDetailsPanelVisible !== true,
 		});
+
+		const selectionModel = selection.map((item) => item.id);
 
 		return (
 			<div className={panelCls}>
-				<div style={{ height: 400, width: "100%" }}>
-					<DataGrid
-						rows={todos}
-						columns={columns}
-						pageSize={5}
-						rowsPerPageOptions={[5]}
-						// disableMultipleSelection={false}
-						onSelectionModelChange={this.onSelectionModelChange}
-					/>
-				</div>
+				<DataGrid
+					// data source
+					rows={todos}
+					// columns definition
+					columns={columns}
+					// page size
+					pageSize={20}
+					// page size options
+					rowsPerPageOptions={[20]}
+					// row selection
+					selectionModel={selectionModel}
+					// row selection handler
+					onSelectionModelChange={this.onSelectionModelChange}
+				/>
 			</div>
 		);
 	}

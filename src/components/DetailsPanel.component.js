@@ -8,10 +8,8 @@ class DetailsPanel extends React.Component {
 		super(props);
 
 		const { todo = {} } = props;
-
 		this.state = {
-			todoItem: todo.name || "hello world!",
-			category: todo.category || "personal",
+			todo,
 			categories: [
 				{
 					name: "Personal",
@@ -25,8 +23,22 @@ class DetailsPanel extends React.Component {
 		};
 	}
 
+	onChange = (e) => {
+		const { value } = e.target;
+		const { todo } = this.state;
+		const { updateTodo } = this.props;
+
+		todo.name = value;
+
+		this.setState({
+			todo,
+		});
+
+		updateTodo(todo);
+	};
+
 	onCategoryChange = (e) => {
-		const { value } = e;
+		const { value } = e.target;
 
 		this.setState({
 			category: value,
@@ -34,7 +46,9 @@ class DetailsPanel extends React.Component {
 	};
 
 	render() {
-		const { category, categories, todoItem } = this.state;
+		const { categories, todo } = this.state;
+
+		// change classes of the top-level div element
 		const panelClassNames = classNames("details-panel", {
 			visible: true,
 		});
@@ -45,15 +59,17 @@ class DetailsPanel extends React.Component {
 					required
 					fullWidth={false}
 					label='Required'
-					value={todoItem}
+					value={todo.name}
 					variant='filled'
+					onChange={this.onChange}
 				/>
 				<TextField
 					select
 					fullWidth={false}
 					label='Category'
 					variant='filled'
-					value={category}>
+					value={todo.category}
+					onChange={this.onCategoryChange}>
 					{categories.map((option) => (
 						<MenuItem key={option.value} value={option.value}>
 							{option.name}
