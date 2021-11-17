@@ -1,70 +1,101 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import "./assets/theme/index.scss";
 import "./App.css";
 import todoData from "./data/todo.json";
+import IdGenerator from "./data/IdGenerator";
 
 import TopPanel from "./components/TopPanel.component";
 import CenterPanel from "./components/CenterlPanel.component";
 import DetailsPanel from "./components/DetailsPanel.component";
 
+const unid = IdGenerator();
+
 function App() {
-	const [todoItems, setTodoItems] = useState(todoData);
-	const [isDetailsPanelVisible, setIsDetailsPanelVisible] = useState(false);
-	const [selection, setSelection] = useState([]);
+    const [todoItems, setTodoItems] = useState(todoData);
+    const [isDetailsPanelVisible, setIsDetailsPanelVisible] = useState(false);
+    const [selection, setSelection] = useState([]);
+    const [incompletedTodosCount, setIncompletedTodosCount] = useState(0);
 
-	const showTodo = (todo) => {
-		setSelection([todo]);
-		setIsDetailsPanelVisible(true);
-	};
+    useEffect(() => {
+        const current = new Date();
 
-	const hideTodo = () => {
-		setSelection([]);
-		setIsDetailsPanelVisible(false);
-	};
+        // count the number of incompleted todos
+        const count = todoItems.reduce((_count, item) => {
+            if (new Date(item.complete_by) > current.getTime()) {
+                return _count + 1;
+            }
 
-	const createTodo = (todo) => {
-		setTodoItems([...todoItems, todo]);
-	};
+            return _count;
+        }, 0);
 
-	const updateTodo = (todo) => {
-		setTodoItems(
-			todoItems.map((todoItem) => {
-				return todoItem.id === todo.id ? todo : todoItem;
-			})
-		);
-	};
+        setIncompletedTodosCount(count);
+    }, [todoItems]);
 
-	const selectTodo = (todoId) => {
-		let selectedTodoItem = todoItems.find((item) => {
-			return item.id === todoId;
-		});
+    const showTodo = (todo) => {
+        setSelection([todo]);
+        setIsDetailsPanelVisible(true);
+    };
 
-		showTodo(selectedTodoItem);
-	};
+    const hideTodo = () => {
+        setSelection([]);
+        setIsDetailsPanelVisible(false);
+    };
 
-	const deselectTodo = () => {
-		hideTodo();
-	};
+    const createTodo = () => {
+        const newTodo = {
+            id: unid(),
+            name: "",
+            category: "personal",
+            complete_by: "",
+        };
 
-	return (
-		<div className='App viewport'>
-			<TopPanel deselectTodo={deselectTodo} />
-			<CenterPanel
-				todos={todoItems}
-				selection={selection}
-				isDetailsPanelVisible={isDetailsPanelVisible}
-				onSelectionModelChange={selectTodo}
-			/>
-			{isDetailsPanelVisible && (
-				<DetailsPanel
-					todo={selection[0]}
-					createTodo={createTodo}
-					updateTodo={updateTodo}
-				/>
-			)}
-		</div>
-	);
+        console.log(newTodo);
+    };
+
+    const updateTodo = (todo) => {
+        setTodoItems(
+            todoItems.map((todoItem) => {
+                return todoItem.id === todo.id ? todo : todoItem;
+            })
+        );
+    };
+
+    const selectTodo = (todoId) => {
+        let selectedTodoItem = todoItems.find((item) => {
+            return item.id === todoId;
+        });
+
+        showTodo(selectedTodoItem);
+    };
+
+    const deselectTodo = () => {
+        hideTodo();
+    };
+
+    const searchTodo = (term) => {
+        console.log(term);
+    };
+
+    return (
+        <div className="App viewport">
+            <TopPanel
+                todosCount={incompletedTodosCount}
+                createTodo={createTodo}
+                deselectTodo={deselectTodo}
+                searchTodo={searchTodo}
+            />
+            <CenterPanel
+                todos={todoItems}
+                selection={selection}
+                isDetailsPanelVisible={isDetailsPanelVisible}
+                onSelectionModelChange={selectTodo}
+            />
+            {isDetailsPanelVisible && (
+                <DetailsPanel todo={selection[0]} updateTodo={updateTodo} />
+            )}
+        </div>
+    );
 }
 
 export default App;
